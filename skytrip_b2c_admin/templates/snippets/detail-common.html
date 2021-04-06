@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block head_title %}
+{% block page_short_title %}
+{% block breadcrumb %}
+{{ page_short_title }}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% block page_title %}
+{{ page_title }}
+{% endblock %}
+
+
+{% block content %}
+
+{% if can_view == True %}
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title text-center">
+            <span class="">{{ page_title }}</span>
+        </h4>
+        {% if not list_url == None or not create_url == None or not update_url == None or not delete_url == None %}
+        <div class="text-center">
+            {% if not create_url == None and can_add_change == True %}
+            <a href="{% url create_url %}" class="btn btn-primary">
+                Create
+            </a>
+            {% endif %}
+            {% if not update_url == None and can_add_change == True %}
+            {% if not object.slug == None %}
+            <a href="{% url update_url slug=object.slug %}" class="btn btn-primary">
+                <span class="">
+                    Edit
+                </span>
+            </a>
+            {% else %}
+            <a href="{% url update_url id=object.id %}" class="btn btn-primary">
+                <span class="">
+                    Edit
+                </span>
+            </a>
+            {% endif %}
+
+            {% endif %}
+            {% if not list_url == None and can_view == True %}
+            <a href="{% url list_url %}" class="btn btn-primary">
+                View List
+            </a>
+            {% endif %}
+
+            {% if can_delete == True %}
+            {% if not delete_url == None %}
+            {% if not object.slug == None %}
+            <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_{{namespace}}"
+                value="{{object.slug}}" data-toggle="modal" data-target="#modal-delete-{{namespace}}">
+                Delete
+            </button>
+            {% else %}
+            <button type="button" class="btn btn-danger btn-xs text-deco-none bg-c-danger m-1 js_delete_{{namespace}}"
+                value="{{object.id}}" data-toggle="modal" data-target="#modal-delete-{{namespace}}">
+                Delete
+            </button>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table id="list-datatable" class="display table-striped table-bordered align-items-center table-flush
+                        table-hover cell-border" style="width:100%">
+                        <tr>
+                            <th>
+                                <div class="row m-3">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                                        <span class="text-dark font-bold">
+                                            Title
+                                        </span>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+                                        <span class="text-dark font-bold">
+                                            Value
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                        {% for label, value in object.get_fields %}
+                        <tr>
+                            <th>
+                                <div class="row m-3">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                                        {{ label|var_to_title }}
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+                                        <span class="text-muted font-700 font-15">
+                                            {% if value == None %}
+                                            --
+                                            {% else %}
+                                            {{ value }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+
+{% if can_delete == True %}
+
+{% if not delete_url == None %}
+{% include 'snippets/delete-modal.html' %}
+{% endif %}
+
+{% endif %}
+
+{% endblock %}

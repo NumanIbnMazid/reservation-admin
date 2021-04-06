@@ -1,0 +1,30 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% block page_title %}
+{% trans "Logout" %}
+{% endblock %}{% endblock %}
+
+{% block content %}
+
+<p>{% trans 'Are you sure you want to logout?' %}</p>
+
+<form method="post" action="{% url 'account_logout' %}" data-toggle="validator">
+  {% csrf_token %}
+  {% include 'snippets/account-form.html' %}
+  <div class="row">
+    <div class="col-sm-3 text-center m-2">
+      <button type="submit" class="btn btn-danger btn-md">
+        {% trans 'Yes, Logout' %}
+      </button>
+    </div>
+    <div class="col-sm-3 text-center m-2">
+      <a href="{% url 'home' %}" class="btn btn-primary btn-md">
+        No
+      </a>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

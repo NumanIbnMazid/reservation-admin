@@ -1,0 +1,85 @@
+{% load static %}
+
+{% url 'home' as home_url %}
+{% url 'account_signup' as signup_url %}
+{% url 'account_login' as login_url %}
+{% url 'account_logout' as logout_url %}
+
+
+<nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'assets/img/icons/skytrip.png' %}" class="navbar-brand-img" alt="skytrip-b2c-admin">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+            aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse navbar-custom-collapse collapse" id="navbar-collapse">
+            <div class="navbar-collapse-header">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a href="{% url 'home' %}">
+                            <img src="{% static 'assets/img/icons/skytrip.png' %}">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse"
+                            data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav mr-auto">
+                {% if not request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{{ login_url }}" class="nav-link">
+                        <span class="nav-link-inner--text">Login</span>
+                    </a>
+                </li>
+                {% else %}
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="media align-items-center">
+                            <span class="avatar avatar-sm rounded-circle">
+                                <img alt="{{ request.user.username }}" src="{% static 'assets/img/icons/avatar.png' %}">
+                            </span>
+                            <div class="media-body  ml-2  d-none d-lg-block">
+                                <span class="mb-0 text-sm  font-weight-bold">{{ request.user.username }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu  dropdown-menu-right ">
+                        <div class="dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome!</h6>
+                        </div>
+                        <a href="#!" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a href="{% url 'account_email' %}" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>Manage Email</span>
+                        </a>
+                        <a href="{% url 'account_change_password' %}" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>Change Password</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ logout_url }}" class="dropdown-item">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+            <hr class="d-lg-none" />
+        </div>
+    </div>
+</nav>

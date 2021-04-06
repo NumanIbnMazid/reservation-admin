@@ -1,0 +1,48 @@
+
+{% if perms.ticket_issue.add_ticketissue %}
+<!-- Modal -->
+<div class="modal fade" id="ticketIssueModal" tabindex="-1" role="dialog" aria-labelledby="ticketIssueModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ticketIssueModalLabel">Issue Air Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'pnr:issue_ticket' %}" id="ticketIssueModalForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="pnr_no_id" name="pnr_no" value="0">
+                    <span class="text-primary font-17 font-bold">
+                        Are you sure you want to Issue this PNR to Air Ticket?
+                    </span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Yes, Issue Air Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block extra_js %}
+
+<script>
+    // delete dynamic item
+    $(".js_issue_air_ticket").click(function () {
+        let pnr_no = this.value;
+        $('#pnr_no_id').val(pnr_no);
+        console.log(pnr_no);
+    });
+    document.querySelector('#ticketIssueModalForm').addEventListener('submit', function (e) {
+        let form = this;
+        e.preventDefault();
+        form.submit();
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,250 @@
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/chart-js/Chart.min.css' %}" type="text/css">
+{% endblock %}
+
+<div class="row">
+
+    <div class="col-xl-6 col-md-6">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-body text-center font-bold">
+                PNRs vs ISSUED AIR TICKETs vs PAYMENTs
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                <canvas id="pnrVSticketissue" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-md-6">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-body text-center font-bold">
+                Airline wise PNR
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                <canvas id="airlineWisePNR" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-md-6">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-body text-center font-bold">
+                PNRs vs ISSUED AIR TICKETs (B2C)
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                <canvas id="pnrVSticketIssueb2c" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-md-6">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-body text-center font-bold">
+                PNRs vs ISSUED AIR TICKETs (B2B)
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                <canvas id="pnrVSticketIssueb2b" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{% static 'assets/vendor/chart-js/Chart.min.js' %}"></script>
+
+<!-- Airline Wise PNR -->
+<script>
+    var carrier_code_stats_dict = $("#carrier_code_stats_dict").val();
+    var rgba_colors_dict = $("#rgba_colors").val();
+
+    let rgba_colors = JSON.parse(rgba_colors_dict);
+    // console.log(rgba_colors);
+    let parsed_carrier_stats = JSON.parse(carrier_code_stats_dict);
+
+    let counter_length = Object.keys(parsed_carrier_stats).length;
+    // console.log(Object.keys(parsed_carrier_stats).length);
+
+    let backgroundColorArr = []
+    let borderColorArr = []
+
+    counter = 1;
+    while (counter <= (counter_length)) {
+        backgroundColorArr.push(rgba_colors[counter][1]);
+        borderColorArr.push(rgba_colors[counter][2]);
+        counter++
+    }
+
+    // console.log(backgroundColorArr, "backgroundColorArr");
+    // console.log(borderColorArr, "borderColorArr");
+
+    var ctx = document.getElementById('airlineWisePNR').getContext('2d');
+    var airlineWisePNR = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(parsed_carrier_stats),
+            datasets: [{
+                label: '# of Votes',
+                data: Object.values(parsed_carrier_stats),
+                backgroundColor: backgroundColorArr,
+                borderColor: borderColorArr,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+<!-- PNR vs Issued Air Tickets -->
+
+<script>
+    let pnr_counter = $("#pnr_date_filtered_count").val();
+    let issued_air_ticket_counter = $("#ticket_issue_date_filtered_count").val();
+    let payment_date_filtered_count = $("#payment_date_filtered_count").val();
+    let pnr_b2c_date_filtered_count = $("#pnr_b2c_date_filtered_count").val();
+    let pnr_b2b_date_filtered_count = $("#pnr_b2b_date_filtered_count").val();
+    let ticket_issue_b2c_date_filtered_count = $("#ticket_issue_b2c_date_filtered_count").val();
+    let ticket_issue_b2b_date_filtered_count = $("#ticket_issue_b2b_date_filtered_count").val();
+
+    var ctx = document.getElementById('pnrVSticketissue').getContext('2d');
+    var pnrVSticketissue = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['PNR', 'ISSUED AIR TICKET', 'PAYMENT'],
+            datasets: [{
+                label: '',
+                data: [pnr_counter, issued_air_ticket_counter, payment_date_filtered_count],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.yLabel;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // PNR B2C
+    var ctx = document.getElementById('pnrVSticketIssueb2c').getContext('2d');
+    var pnrVSticketIssueb2c = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['PNR', 'ISSUED AIR TICKET'],
+            datasets: [{
+                label: '',
+                data: [pnr_b2c_date_filtered_count, ticket_issue_b2c_date_filtered_count],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.yLabel;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // PNR B2B
+    var ctx = document.getElementById('pnrVSticketIssueb2b').getContext('2d');
+    var pnrVSticketIssueb2b = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['PNR', 'ISSUED AIR TICKET'],
+            datasets: [{
+                label: '',
+                data: [pnr_b2b_date_filtered_count, ticket_issue_b2b_date_filtered_count],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.yLabel;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+{% endblock %}

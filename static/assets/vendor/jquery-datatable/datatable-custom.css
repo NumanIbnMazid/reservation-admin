@@ -1,0 +1,10 @@
+.paginate_button {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.page-link {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 5px !important;
+}

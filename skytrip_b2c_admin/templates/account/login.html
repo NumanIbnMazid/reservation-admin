@@ -1,0 +1,36 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+
+{% url 'home' as home_url %}
+{% url 'account_signup' as signup_url %}
+{% url 'account_login' as login_url %}
+{% url 'account_logout' as logout_url %}
+
+{% block head_title %}{% block page_title %}
+Log in
+{% endblock %}{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'account_login' %}" class="" data-toggle="validator">
+  {% csrf_token %}
+  {% include 'snippets/account-form.html' %}
+  <div class="text-center">
+    <button type="submit" class="btn btn-lg btn-primary m-4" style="width: 500px;">Login</button>
+  </div>
+  <a href="{% url 'account_reset_password' %}" class="pull-right m-t-xs"><small>Forgot password?</small></a>
+</form>
+
+{% comment %}
+<p class="text-muted">
+  {% blocktrans %}If you have not created an account yet, then please
+  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+</p>
+
+<div class="line line-dashed"></div>
+<p class="text-muted text-center mt-2"><small>Don't have an account?</small></p>
+<a href="{{ signup_url }}" class="btn btn-info btn-block">Create an account</a>
+
+{% endcomment %}
+
+{% endblock %}

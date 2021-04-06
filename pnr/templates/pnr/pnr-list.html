@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block extra_css %}
+<!-- JQuery DataTable CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/buttons.dataTables.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/datatable-custom.css' %}" />
+{% endblock %}
+
+{% block head_title %}
+{% block page_short_title %}
+{% block breadcrumb %}
+{{ page_short_title }}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% block page_title %}
+{{ page_title }}
+{% endblock %}
+
+
+{% block content %}
+
+
+{% if can_view == True %}
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0 text-center">
+                    <h3 class="mb-0">{{ page_title }}</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    <table id="list-datatable" class="display table table-striped table-bordered align-items-center table-flush
+                        table-hover cell-border" style="width:100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                <th>Expire In</th>
+                                {% for key, value in fields.items %}
+                                {% if not key in label_to_skip %}
+                                <th>{{ value|title }}</th>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+
+                        <tbody class="list">
+
+                            <!-- table body -->
+                            {% for object in list_objects %}
+
+                            <tr {% if object.is_ticketed == True %}class="bg-c-soft-green text-dark" {% endif %}>
+
+                                <th scope="row">
+                                    
+                                    {% if perms.ticket_issue.add_ticketissue and object.is_ticketed == False %}
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary btn-sm js_issue_air_ticket"
+                                        data-toggle="modal" value="{{object.pnr_no}}"
+                                        data-target="#ticketIssueModal">
+                                        Issue Air Ticket
+                                    </button>
+                                    {% endif %}
+
+                                    {% if not detail_url == None and can_view == True %}
+                                    <a {% if not object.slug == None %} href="{% url detail_url slug=object.slug %}"
+                                        {% else %} href="{% url detail_url id=object.id %}" {% endif %} class="btn btn-info btn-sm">
+                                        View
+                                    </a>
+                                    {% endif %}
+
+                                    {% if can_view_pnr_details == True %}
+                                    <a href="{% url 'pnr:pnr_details_list_from_pnr_no' pnr_no=object.pnr_no %}"
+                                        class="btn btn-info btn-sm">
+                                        PNR Details List
+                                    </a>
+                                    {% endif %}
+
+                                </th>
+                                <th scope="row">{{ forloop.counter }}</th>
+
+                                {% with expire_in=object.sabre_token|get_expire_in %}
+
+                                <td {% if expire_in == "Expired" %}class="c-text-danger font-bold"
+                                    {% elif expire_in|first in '2' %}class="text-warning font-bold"{% else %}class="c-text-success font-bold"{% endif %}>
+                                    {{ expire_in }}
+                                </td>
+
+                                {% endwith %}
+
+                                {% for label, value in object.get_fields %}
+
+                                {% if not label in label_to_skip %}
+                                
+                                <td>
+                                    {{ value }}
+                                </td>
+
+                                {% endif %}
+
+                                {% endfor %}
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="{{ fields_count }}" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+
+                        <tfoot class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                <th>Expire In</th>
+                                {% for key, value in fields.items %}
+                                {% if not key in label_to_skip %}
+                                <th>{{ value|upper }}</th>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Card footer -->
+                <!-- <div class="card-footer py-4 text-center">
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include "pnr/modals.html" %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#list-datatable').DataTable({
+            "pagingType": "full_numbers",
+            "dom": 'Bfrtip',
+            "stateSave": true,
+            "scrollCollapse": true,
+            "buttons": [
+                //'copy', 'csv', 'excel', 'pdf', 'print'
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    });
+</script>
+<!-- JQuery DataTable JS -->
+<script src="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+
+{% if not detail_url == None %}
+<script>
+    $(document).ready(function () {
+        $('.point-tr').click(function () {
+            window.location = $(this).attr('href');
+            return false;
+        });
+    });
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Skytrip B2C Admin, Numan Ibn mazid">
+    <meta name="author" content="Numan Ibn Mazid">
+    <title>
+        {% block head_title %}Blocked{% endblock %} | Skytrip B2C Admin Panel
+    </title>
+    <!-- styles -->
+    {% include "components/styles.html" %}
+    {% block extra_css %}{% endblock %}
+    <link href="{% static 'assets/css/blocked.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                {% include 'snippets/messages.html' %}
+                <div id="header">
+                    <h1>Blocked!</h1>
+                    <hr>
+
+                    <h3>You are not allowed to access!</h3>
+                </div>
+
+                <div id="footer">
+                    <div class="contact"><i class="sign call">Tip: </i>
+                        <p class="marquee">If you have any query, please feel free to contact with us.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

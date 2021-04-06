@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+<!-- extra styles -->
+{% block extra_css %}
+<!-- JQuery DataTable CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/buttons.dataTables.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/datatable-custom.css' %}" />
+{% endblock %}
+
+{% block head_title %}
+{% block page_short_title %}
+{% block breadcrumb %}
+{{ page_short_title }}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% block page_title %}
+{{ page_title }}
+{% endblock %}
+
+
+<!-- main content -->
+{% block content %}
+
+<div class="row">
+
+    {% if can_add_change == True %}
+
+    <div class="{% if fields_count > 7 %}col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12{% else %}col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12{% endif %} align-items-center">
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {{ page_title }}
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form" method="POST" data-toggle="validator" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    {% include 'snippets/form.html' %}
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- /.card -->
+    </div>
+
+    {% endif %}
+
+    {% if can_view == True %}
+
+    {% if not list_objects == None %}
+    <div class="{% if fields_count > 7 %}col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12{% else %}col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12{% endif %} align-items-center">
+        <div class="card card-primary">
+            <h4 class="card-title text-center mt-4 font-15 font-bold">
+                {{ namespace|title }} List
+            </h4>
+            <div class="card-body">
+                {% if list_template == None %}
+                {% include 'snippets/datatable.html' %}
+                {% else %}
+                {% include list_template %}
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% if can_delete == True %}
+
+{% if not delete_url == None %}
+{% include 'snippets/delete-modal.html' %}
+{% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+
+<!-- extra scripts -->
+{% block extra_js %}
+
+<!-- Bootstrap Validator -->
+<script src="{% static 'assets/vendor/bootstrap-validator/validator.js' %}"></script>
+
+<!-- JQuery DataTable JS -->
+<script src="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#list-datatable').DataTable({
+            "pagingType": "full_numbers",
+            "dom": 'Bfrtip',
+            "stateSave": true,
+            "scrollCollapse": true,
+            "buttons": [
+                //'copy', 'csv', 'excel', 'pdf', 'print'
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    });
+</script>
+
+
+{% comment %}
+{% if not detail_url == None %}
+<script>
+    $(document).ready(function () {
+        $('.point-tr').click(function () {
+            window.location = $(this).attr('href');
+            return false;
+        });
+    });
+</script>
+{% endif %}
+{% endcomment %}
+
+{% endblock %}

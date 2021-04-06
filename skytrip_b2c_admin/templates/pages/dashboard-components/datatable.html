@@ -1,0 +1,119 @@
+{% load custom_tags %}
+
+{% if can_view == True %}
+
+<!-- Page content -->
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0 text-center">
+                <h3 class="mb-0">{{ namespace }}</h3>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table id="{{datatable_id}}" class="display table table-striped table-bordered align-items-center table-flush
+                        table-hover cell-border" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            {% for key, value in fields.items %}
+
+                            {% if not key in skip_labels %}
+                            <th>{{ value|remove_id|title }}</th>
+                            {% endif %}
+
+                            {% endfor %}
+                        </tr>
+                    </thead>
+
+                    <tbody class="list">
+
+                        <!-- table body -->
+                        {% for object in list_objects %}
+                        <tr>
+
+                            <th scope="row">{{ forloop.counter }}</th>
+
+                            {% for label, value in object.get_fields %}
+
+                            {% if not label in skip_labels %}
+
+                            {% if label in 'image, photo, picture' %}
+
+                            <td>
+                                {% if not value.url == None %}
+
+                                <img src="{{ value.url }}" alt="{{ value }}" style="height:100px;width:100px;">
+
+                                {% else %}
+                                ---
+                                {% endif %}
+                            </td>
+
+                            {% elif label in 'country' %}
+                            <td>
+                                {{ value.name }}
+                            </td>
+
+                            {% else %}
+
+                            <td>{{ value }}</td>
+                            {% endif %}
+
+                            {% endif %}
+
+                            {% endfor %}
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="{{ fields_count }}" class="text-center">
+                                <div class="alert alert-warning">
+                                    No item found!
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                    <tfoot class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            {% for key, value in fields.items %}
+
+                            {% if not key in skip_labels %}
+                            <th>{{ value|remove_id|upper }}</th>
+                            {% endif %}
+
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Card footer -->
+            <!-- <div class="card-footer py-4 text-center">
+                </div> -->
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#{{datatable_id}}').DataTable({
+            "pagingType": "full_numbers",
+            "dom": 'Bfrtip',
+            "stateSave": true,
+            "scrollCollapse": true,
+            "buttons": [
+                //'copy', 'csv', 'excel', 'pdf', 'print'
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    });
+</script>
+{% endblock %}

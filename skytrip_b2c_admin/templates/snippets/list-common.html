@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block extra_css %}
+<!-- JQuery DataTable CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/buttons.dataTables.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/datatable-custom.css' %}" />
+{% endblock %}
+
+{% block head_title %}
+{% block page_short_title %}
+{% block breadcrumb %}
+{{ page_short_title }}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% block page_title %}
+{{ page_title }}
+{% endblock %}
+
+
+{% block content %}
+
+
+{% if can_view == True %}
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0 text-center">
+                    <h3 class="mb-0">{{ page_title }}</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    <table id="list-datatable" class="display table table-striped table-bordered align-items-center table-flush
+                        table-hover cell-border"
+                        style="width:100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                {% for key, value in fields.items %}
+                                <th>{{ value|remove_id|title }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+
+                        <tbody class="list">
+
+                            <!-- table body -->
+                            {% for object in list_objects %}
+
+                            <tr>
+                                <td>
+                                    {% if not detail_url == None and can_view == True %}
+                                    {% if not object.slug == None %}
+                                    <a href="{% url detail_url slug=object.slug %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            View
+                                        </span>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url detail_url id=object.id %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            View
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+
+                                <th scope="row">{{ forloop.counter }}</th>
+                                {% for label, value in object.get_fields %}
+
+                                <td>
+                                    {{ value }}
+                                </td>
+
+                                {% endfor %}
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="{{ fields_count }}" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+
+                        <tfoot class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                {% for key, value in fields.items %}
+                                <th>{{ value|remove_id|upper }}</th>
+                                {% endfor %}
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Card footer -->
+                <!-- <div class="card-footer py-4 text-center">
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#list-datatable').DataTable({
+            "pagingType": "full_numbers",
+            "dom": 'Bfrtip',
+            "stateSave": true,
+            "scrollCollapse": true,
+            "buttons": [
+                //'copy', 'csv', 'excel', 'pdf', 'print'
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    });
+</script>
+<!-- JQuery DataTable JS -->
+<script src="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+
+{% if not detail_url == None %}
+<script>
+    $(document).ready(function(){
+        $('.point-tr').click(function(){
+            window.location = $(this).attr('href');
+            return false;
+        });
+    });
+</script>
+{% endif %}
+
+{% endblock %}

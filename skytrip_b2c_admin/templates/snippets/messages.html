@@ -1,0 +1,101 @@
+{% if messages %}
+
+{% comment %}
+<div class="row display-hidden" id="html-message">
+    <div class="messages text-center font-bold font-15">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible"
+            role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endcomment %}
+
+<div class="container-fluid display-hidden" id="html-message"></div>
+
+{% endif %}
+
+
+{% if messages %}
+{% for message in messages %}
+
+{% if not "Successfully signed in as" in message %}
+
+{% block extra_js %}
+<script>
+    let skip_messages = ["Successfully signed in as {{ request.user }}."]
+    if (!skip_messages.includes("{{ message|safe }}")) {
+        try {
+
+            //== Class definition
+            var SweetAlertMessages = function () {
+                var initDemos = function () {
+
+                    //== Sweetalert Demo 4
+                    $(document).ready(function (e) {
+                        swal({
+                            title: "{{ message.tags }}!".toUpperCase(),
+                            text: "{{ message|safe }}",
+                            icon: "{{ message.tags }}",
+                            buttons: {
+                                confirm: {
+                                    text: "OK",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-success",
+                                    closeModal: true
+                                },
+                            }
+                        });
+                    });
+                };
+                return {
+                    //== Init
+                    init: function () {
+                        initDemos();
+                    },
+                };
+            }();
+
+
+            //== Class Initialization
+            jQuery(document).ready(function () {
+                SweetAlertMessages.init();
+            });
+        } catch (err) {
+            $("#html-message").removeClass("display-hidden");
+
+            let html = "<div class='row'>\
+                <div class='col'>\
+                    <div class='card'>\
+                        <div class='messages text-center font-bold font-15'>\
+                            {% for message in messages %}\
+                            <div class='alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible' role='alert'>\
+                                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>\
+                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}\
+                                <p>{{ message }}</p>\
+                            </div>\
+                            {% endfor %}\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>\
+            "
+
+            $("#html-message").append(html);
+
+            throw err;
+        }
+    }
+</script>
+
+{% endblock %}
+
+{% endif %}
+
+{% endfor %}
+{% endif %}

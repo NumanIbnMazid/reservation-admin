@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-12">
+
+        {% include "pages/dashboard-components/date-input.html" %}
+
+        <!-- hidden value holder inputs -->
+        {% include "pages/dashboard-components/snippets/hidden-value-holders.html" %}
+
+        <!-- Module Satats -->
+        <div class="mt-2">
+            {% include "pages/dashboard-components/snippets/statistics-count.html" %}
+        </div>
+
+        <!-- Graphical Charts -->
+        <div class="mt-2">
+            {% include "pages/dashboard-components/snippets/charts.html" %}
+        </div>
+
+        <!-- PNR List -->
+        <div class="mt-2">
+            {% with can_view=can_view_pnr namespace="PNR List" fields=pnr_fields list_objects=pnr_date_filtered fields_count=pnr_fields_count datatable_id="pnr_table" %}
+            {% include "pages/dashboard-components/datatable.html" %}
+            {% endwith %}
+        </div>
+
+        <!-- Ticket Issue List -->
+        <div class="mt-2">
+            {% with can_view=can_view_ticket_issue namespace="Ticket Issue List" fields=ticket_issue_fields list_objects=ticket_issue_date_filtered fields_count=ticket_issue_fields_count datatable_id="ticket_issue_table" %}
+            {% include "pages/dashboard-components/datatable.html" %}
+            {% endwith %}
+        </div>
+
+        <!-- Payment List -->
+        <div class="mt-2">
+            {% with can_view=can_view_payment namespace="Payment List" fields=payment_fields list_objects=payment_date_filtered fields_count=payment_fields_count datatable_id="payment_table" %}
+            {% include "pages/dashboard-components/datatable.html" %}
+            {% endwith %}
+        </div>
+
+        <!-- Skytrip User List -->
+        <div class="mt-2">
+            {% with can_view=can_view_skytrip_user namespace="Skytrip User List" fields=skytrip_user_fields list_objects=skytrip_user_date_filtered fields_count=skytrip_user_fields_count datatable_id="skytrip_user_table" %}
+            {% include "pages/dashboard-components/datatable.html" %}
+            {% endwith %}
+        </div>
+
+    </div>
+</div>

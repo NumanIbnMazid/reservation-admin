@@ -1,0 +1,154 @@
+{% load custom_tags %}
+
+{% if can_view == True %}
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0 text-center">
+                    <h3 class="mb-0">{{ namespace|title }} List</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    <table id="list-datatable" class="display table table-striped table-bordered align-items-center table-flush
+                        table-hover cell-border" style="width:100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                {% for key, value in fields.items %}
+                                <th>{{ value|remove_id|title }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+
+                        <tbody class="list">
+
+                            <!-- table body -->
+                            {% for object in list_objects %}
+                            <tr>
+
+                                <td>
+                                    {% if not update_url == None and can_add_change == True %}
+                                    {% if not object.slug == None %}
+                                    <a href="{% url update_url slug=object.slug %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            Edit
+                                        </span>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url update_url id=object.id %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            Edit
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if not detail_url == None and can_view == True %}
+                                    {% if not object.slug == None %}
+                                    <a href="{% url detail_url slug=object.slug %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            View
+                                        </span>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url detail_url id=object.id %}"
+                                        class="btn btn-primary btn-sm text-deco-none">
+                                        <span class="">
+                                            View
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if not delete_url == None and can_delete == True %}
+                                    {% if not object.slug == None %}
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm text-deco-none bg-c-danger m-1 js_delete_{{namespace}}"
+                                        value="{{object.slug}}" data-toggle="modal"
+                                        data-target="#modal-delete-{{namespace}}">
+                                        Delete
+                                    </button>
+                                    {% else %}
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm text-deco-none bg-c-danger m-1 js_delete_{{namespace}}"
+                                        value="{{object.id}}" data-toggle="modal"
+                                        data-target="#modal-delete-{{namespace}}">
+                                        Delete
+                                    </button>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if update_url == None and delete_url == None %}
+                                    ---
+                                    {% endif %}
+
+                                </td>
+
+                                <th scope="row">{{ forloop.counter }}</th>
+                                
+                                {% for label, value in object.get_fields %}
+
+                                {% if label in 'image, photo, picture' %}
+
+                                <td>
+                                    {% if not value.url == None %}
+
+                                    <img src="{{ value.url }}" alt="{{ value }}" style="height:100px;width:100px;">
+
+                                    {% else %}
+                                    ---
+                                    {% endif %}
+                                </td>
+
+                                {% elif label in 'country' %}
+                                <td>
+                                    {{ value.name }}
+                                </td>
+
+                                {% else %}
+                                <td>{{ value }}</td>
+                                {% endif %}
+
+                                {% endfor %}
+
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="{{ fields_count }}" class="text-center">
+                                    <div class="alert alert-warning">
+                                        No item found!
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+
+                        <tfoot class="thead-dark">
+                            <tr>
+                                <th>Action</th>
+                                <th>#</th>
+                                {% for key, value in fields.items %}
+                                <th>{{ value|remove_id|upper }}</th>
+                                {% endfor %}
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Card footer -->
+                <!-- <div class="card-footer py-4 text-center">
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}

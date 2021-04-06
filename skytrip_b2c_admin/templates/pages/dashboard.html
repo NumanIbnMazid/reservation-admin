@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+<!-- extra styles -->
+{% block extra_css %}
+<!-- JQuery DataTable CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/buttons.dataTables.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/jquery-datatable/datatable-custom.css' %}" />
+{% endblock %}
+
+{% block head_title %}
+{% block page_short_title %}
+{% block breadcrumb %}
+{{ page_short_title }}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% block page_title %}
+{{ page_title }}
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid mt--6">
+
+    {% include "pages/dashboard-components/datewise-reports.html" %}
+    
+</div>
+
+{% endblock %}
+
+
+<!-- extra scripts -->
+{% block extra_js %}
+
+<!-- Bootstrap Validator -->
+<script src="{% static 'assets/vendor/bootstrap-validator/validator.js' %}"></script>
+
+<!-- JQuery DataTable JS -->
+<script src="{% static 'assets/vendor/jquery-datatable/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.flash.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/jszip.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-datatable/buttons.colVis.min.js' %}"></script>
+
+
+<script>
+
+</script>
+{% endblock %}

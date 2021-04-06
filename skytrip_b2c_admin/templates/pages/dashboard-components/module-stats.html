@@ -1,0 +1,79 @@
+<div class="card">
+    <div class="card-header border-0">
+        <div class="row align-items-center">
+            <div class="col text-center">
+                <h3 class="mb-0">Module Statistics</h3>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Module</th>
+                    <th scope="col">Counts</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">
+                        Passenger Name Records (PNR)
+                    </th>
+                    <td>
+                        {{ pnrs_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        Issued Air Tickets
+                    </th>
+                    <td>
+                        {{ issued_tickets_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        Payments
+                    </th>
+                    <td>
+                        {{ payments_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        Skytrip Users
+                    </th>
+                    <td>
+                        {{ skytrip_users_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        Admin Users
+                    </th>
+                    <td>
+                        {{ admin_users_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        User Groups
+                    </th>
+                    <td>
+                        {{ user_groups_count }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        User Permissions
+                    </th>
+                    <td>
+                        {{ user_permissions_count }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+{% load widget_tweaks %}
+
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in hidden_field.errors %}
+    <p class="text-danger font-italic">
+        <strong>(Hidden field {{ hidden_field.name }}) {{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+    <p class="text-white">
+        <strong>{{ error }}</strong>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+{% for field in form.visible_fields %}
+<div class="form-group row m-3">
+    <div class="{% if not field.label == 'Remember Me' %}input-group input-group-merge input-group-alternative"{% endif %}>
+        <div class="col-md-3">
+            {% if not field.label == "Remember Me" %}
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <strong>{{ field.label |title }}</strong>
+                </span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-9">
+            <!-- Main Input Item -->
+            {% if field.label == "Remember Me" %}
+            <span class="m-3">
+                Remember Me
+                {{ field|attr:"autocomplete:off"|add_class:'' }}
+            </span>
+            {% else %}
+            {{ field|attr:"autocomplete:off"|add_class:'form-control p-4' }}
+            {% endif %}
+
+            <div class="help-block with-errors text-center"></div>
+
+            {% if field.help_text %}
+            <div class="label ml-2">
+                <p id="help_block" class="form-text help-text">
+                    {{ field.help_text|safe }}
+                </p>
+            </div>
+            {% endif %}
+
+            {% if field.errors %}
+            {% for error in field.errors %}
+            <div class="error mt-1">
+                <b class="text-danger">
+                    <p id="form_error">{{ error|safe }}</p>
+                </b>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}

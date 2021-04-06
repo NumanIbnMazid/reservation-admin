@@ -1,0 +1,85 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Skytrip B2C Admin, Numan Ibn mazid">
+    <meta name="author" content="Numan Ibn Mazid">
+    <title>
+        {% block head_title %}Access Denied{% endblock %} | Skytrip B2C Admin Panel
+    </title>
+    <!-- styles -->
+    {% include "components/styles.html" %}
+    {% block extra_css %}{% endblock %}
+    <link href="{% static 'assets/css/access-denied.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'snippets/messages.html' %}
+    <!-- Main Page Starts -->
+    <div class="error-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12">
+                    <div class="error-text m-4">
+                        <h1 class="error font-40 c-text-danger font-bold">
+                            Access Denied !
+                        </h1>
+                        <div class="im-sheep">
+                            <div class="top">
+                                <div class="body"></div>
+                                <div class="head">
+                                    <div class="im-eye one"></div>
+                                    <div class="im-eye two"></div>
+                                    <div class="im-ear one"></div>
+                                    <div class="im-ear two"></div>
+                                </div>
+                            </div>
+                            <div class="im-legs">
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                                <div class="im-leg"></div>
+                            </div>
+                        </div>
+                        <h4 class="text-danger">
+                            You don't have Permission to view the requested page content.
+                        </h4>
+                        <h5 class="c-text-primary">
+                            You are missing one of the required permissions to view the requested page content.
+                        </h5>
+
+                        {% if permission.can_browse == False or permission.can_donate == False or permission.can_ask_for_a_donor == False or permission.can_manage_bank == False or permission.can_chat == False %}
+                        <p class="text-dark">
+                            <div class="table-responsive">
+                                <h4 class="text-danger">Do not have permission to access this page!</h4>
+                            </div>
+                        </p>
+                        {% endif %}
+
+                        <div class="error-actions">
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-lg m-2">
+                                <i class="fas fa-home"></i>
+                                Take Me Home
+                            </a>
+                            <button id="go_back" class="btn btn-lg btn-info m-2">
+                                <i class="flaticon-back"></i>
+                                Go Back
+                            </button>
+                        </div>
+                        <div class="contact">
+                            <p class="marquee">If you have any query, please feel free to contact with us.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    {% include "components/scripts.html" %}
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
